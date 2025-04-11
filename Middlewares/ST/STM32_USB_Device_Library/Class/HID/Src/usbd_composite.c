@@ -4,6 +4,9 @@
 #include "usbd_hid_mouse.h"
 #include "usbd_custom_hid.h"
 
+
+#include "usbd_desc.h"
+
 /* Forward declarations of composite class callbacks */
 static uint8_t Composite_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx);
 static uint8_t Composite_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx);
@@ -11,6 +14,11 @@ static uint8_t Composite_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *r
 static uint8_t Composite_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t Composite_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t Composite_EP0_RxReady(USBD_HandleTypeDef *pdev);
+static uint8_t* USBD_Composite_GetFSConfigDescriptor(uint16_t *length)
+{
+    *length = USBD_Composite_CfgDescSize;
+    return USBD_Composite_CfgDesc;
+}
 
 /* Composite Class callbacks structure */
 USBD_ClassTypeDef USBD_Composite =
@@ -18,13 +26,17 @@ USBD_ClassTypeDef USBD_Composite =
   Composite_Init,
   Composite_DeInit,
   Composite_Setup,
-  NULL,              /* EP0_TxSent */
+  NULL,                       /* EP0_TxSent */
   Composite_EP0_RxReady,
   Composite_DataIn,
   Composite_DataOut,
-  NULL,
-  NULL,
-  NULL,
+  NULL,                       /* SOF */
+  NULL,                       /* IsoINIncomplete */
+  NULL,                       /* IsoOUTIncomplete */
+  NULL,                       /* GetHSConfigDescriptor (not used for FS) */
+  USBD_Composite_GetFSConfigDescriptor,
+  NULL,                       /* GetOtherSpeedConfigDescriptor */
+  NULL                        /* GetDeviceQualifierDescriptor */
 };
 
 /* Composite_Init: Initialize both HID interfaces */
@@ -47,7 +59,7 @@ static uint8_t Composite_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 /* Composite_DeInit: Deinitialize both HID interfaces */
 static uint8_t Composite_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
-    // If needed, add deinitialization calls for each interface.
+    /* Add per-interface deinitialization if necessary. */
     return USBD_OK;
 }
 
@@ -55,14 +67,10 @@ static uint8_t Composite_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 static uint8_t Composite_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
     uint8_t ret = USBD_OK;
-    
-    /* Check the request type */
+
+    /* Handle class requests only */
     if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_CLASS)
     {
-        /* Dispatch based on the interface number in the wIndex field.
-           Assumption: Interface 0 is for the mouse HID,
-                       Interface 1 is for the custom HID.
-        */
         if(req->wIndex == 0)
         {
             ret = USBD_HID_MOUSE_Setup(pdev, req);
@@ -73,62 +81,45 @@ static uint8_t Composite_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *r
         }
         else
         {
-            ret = USBD_FAIL;  // Unknown interface number
+            ret = USBD_FAIL; // Unknown interface
         }
     }
     else if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_STANDARD)
     {
-        /* For standard requests, typically the USB core will handle GET_DESCRIPTOR, etc.
-           If you need to handle any standard request specifically for your composite device,
-           add the logic here. For now, we return USBD_OK for default handling.
-        */
+        /* Let standard requests be handled by the core (see usbd_ctlreq.c) */
         ret = USBD_OK;
     }
     else
     {
-        /* For other types (vendor-specific etc.), you could add handling if needed */
-        ret = USBD_OK;
+        ret = USBD_FAIL;
     }
-    
     return ret;
 }
 
-/* Composite_DataIn: Handle data IN events */
+/* Composite_DataIn: Handle data IN events by endpoint number */
 static uint8_t Composite_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-    /* Dispatch based on endpoint number if necessary.
-       For example, if endpoint 0x81 is allocated to the mouse and 0x82 for custom HID IN.
-       Uncomment and implement callbacks as needed:
-       
-       if(epnum == 0x81)
-       {
-          return USBD_HID_MOUSE_DataIn(pdev, epnum);
-       }
-       else if(epnum == 0x82)
-       {
-          return USBD_CustomHID_DataIn(pdev, epnum);
-       }
+    /* Dispatch based on endpoint number if needed.
+       For example:
+       if(epnum == 0x81) { return USBD_HID_MOUSE_DataIn(pdev, epnum); }
+       else if(epnum == 0x82) { return USBD_CustomHID_DataIn(pdev, epnum); }
     */
     return USBD_OK;
 }
 
-/* Composite_DataOut: Handle data OUT events */
+/* Composite_DataOut: Handle data OUT events by endpoint number */
 static uint8_t Composite_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-    /* Similarly, dispatch based on endpoint number.
-       For example, if endpoint 0x02 is allocated for custom HID OUT:
-       
-       if(epnum == 0x02)
-       {
-          return USBD_CustomHID_DataOut(pdev, epnum);
-       }
+    /* Dispatch if your custom HID OUT endpoint (e.g., address 0x02)
+       is used for receiving data.
+       For example:
+       if(epnum == 0x02) { return USBD_CustomHID_DataOut(pdev, epnum); }
     */
     return USBD_OK;
 }
 
-/* Composite_EP0_RxReady: Endpoint0 Rx Ready callback */
+/* Composite_EP0_RxReady: Endpoint 0 Rx Ready callback */
 static uint8_t Composite_EP0_RxReady(USBD_HandleTypeDef *pdev)
 {
-    /* Process any control transfer reception here if needed */
     return USBD_OK;
 }
