@@ -1,6 +1,8 @@
 /* Src/usbd_desc.c */
 #include "usbd_desc.h"
 #include "usbd_def.h"
+#include "usbd_hid_mouse.h"
+#include "usbd_custom_hid.h"
 
 /* Definitions for USB descriptors */
 #define USBD_VID                      0x1234
@@ -65,13 +67,13 @@ __ALIGN_BEGIN uint8_t USBD_Composite_CfgDesc[COMPOSITE_CONFIG_DESC_SIZE] __ALIGN
   0x04,                               /* iInterface: Use string index 4 */
 
   /* HID Descriptor for Mouse */
-  0x09,                               /* bLength: HID Descriptor size */
-  0x21,                               /* bDescriptorType: HID */
-  0x11, 0x01,                         /* bcdHID: HID Class Spec release number (1.11) */
-  0x00,                               /* bCountryCode */
-  0x01,                               /* bNumDescriptors: 1 */
-  0x22,                               /* bDescriptorType: Report descriptor */
-  0x32, 0x00,                         /* wDescriptorLength (example value) */
+	0x09,                        // bLength: HID Descriptor size
+	0x21,                        // bDescriptorType: HID
+	0x11, 0x01,                  // bcdHID: HID Class Spec release number (1.11)
+	0x00,                        // bCountryCode
+	0x01,                        // bNumDescriptors: 1
+	0x22,                        // bDescriptorType: Report descriptor
+	LOBYTE(HID_MOUSE_REPORT_DESC_SIZE), HIBYTE(HID_MOUSE_REPORT_DESC_SIZE),
 
   /* Endpoint Descriptor for Mouse IN endpoint */
   0x07,                               /* bLength: Endpoint Descriptor size */
@@ -99,7 +101,7 @@ __ALIGN_BEGIN uint8_t USBD_Composite_CfgDesc[COMPOSITE_CONFIG_DESC_SIZE] __ALIGN
   0x00,                               /* bCountryCode */
   0x01,                               /* bNumDescriptors: 1 */
   0x22,                               /* bDescriptorType: Report descriptor */
-  0x32, 0x00,                         /* wDescriptorLength (example value) */
+  LOBYTE(CUSTOM_HID_REPORT_DESC_SIZE), HIBYTE(CUSTOM_HID_REPORT_DESC_SIZE),
 
   /* Endpoint Descriptor for Custom HID IN endpoint */
   0x07,                               /* bLength: Endpoint Descriptor size */
@@ -146,7 +148,7 @@ uint8_t *USBD_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length, 
       USBD_GetString((uint8_t *)USBD_CUSTOM_HID_INTERFACE_STRING, USBD_StrDesc, length);
       break;
     default:
-      USBD_GetString((uint8_t *)"Unknown", USBD_StrDesc, length);
+      USBD_GetString((uint8_t *)"Fuck", USBD_StrDesc, length);
       break;
   }
   return USBD_StrDesc;

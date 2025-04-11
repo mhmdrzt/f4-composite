@@ -7,6 +7,8 @@
 #endif
 
 #include "usbd_def.h"
+extern uint8_t Custom_HID_ReportDesc[];
+#define CUSTOM_HID_REPORT_DESC_SIZE    39//(sizeof(HID_Mouse_ReportDesc))
 
 uint8_t USBD_CustomHID_Init(USBD_HandleTypeDef *pdev);
 uint8_t USBD_CustomHID_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req);

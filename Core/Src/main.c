@@ -24,7 +24,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_def.h"
+#include "usbd_hid_mouse.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,7 +56,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+extern USBD_HandleTypeDef hUsbDeviceFS;
 /* USER CODE END 0 */
 
 /**
@@ -88,7 +89,10 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-
+	while(hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) 
+    {
+        HAL_Delay(10);
+    }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -98,6 +102,16 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		if (!HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin)) {
+			uint8_t mouseReport[3] = {0x00, -10, 0}; // Move -10 pixels
+			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, mouseReport, sizeof(mouseReport));
+			HAL_Delay(10);
+		}
+    if (!HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin)) {
+			uint8_t mouseReport[3] = {0x00, 10, 0}; // Move 10 pixels right
+			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, mouseReport, sizeof(mouseReport));
+			HAL_Delay(10);
+		}
   }
   /* USER CODE END 3 */
 }
