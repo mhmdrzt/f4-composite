@@ -196,6 +196,8 @@ static uint8_t USBD_GetLen(uint8_t *buf)
   * @param  req: setup request pointer
   * @retval None
   */
+
+
 static void USBD_GetDescriptor(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
   uint16_t len = 0;
@@ -293,46 +295,59 @@ static void USBD_GetDescriptor(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *r
           }
           break;
 
-        case USBD_IDX_CONFIG_STR:
-          if (pdev->pDesc->GetConfigurationStrDescriptor != NULL)
-          {
-            pbuf = pdev->pDesc->GetConfigurationStrDescriptor(pdev->dev_speed, &len);
-          }
-          else
-          {
-            USBD_CtlError(pdev, req);
-            err++;
-          }
-          break;
+//        case USBD_IDX_CONFIG_STR:
+//          if (pdev->pDesc->GetConfigurationStrDescriptor != NULL)
+//          {
+//            pbuf = pdev->pDesc->GetConfigurationStrDescriptor(pdev->dev_speed, &len);
+//          }
+//          else
+//          {
+//            USBD_CtlError(pdev, req);
+//            err++;
+//          }
+//          break;
 
-        case USBD_IDX_INTERFACE_STR:
-          if (pdev->pDesc->GetInterfaceStrDescriptor != NULL)
-          {
-            pbuf = pdev->pDesc->GetInterfaceStrDescriptor(pdev->dev_speed, &len);
-          }
-          else
-          {
-            USBD_CtlError(pdev, req);
-            err++;
-          }
-          break;
+//        case USBD_IDX_INTERFACE_STR:
+//          if (pdev->pDesc->GetInterfaceStrDescriptor != NULL)
+//          {
+//            pbuf = pdev->pDesc->GetInterfaceStrDescriptor(pdev->dev_speed, &len, );
+//          }
+//          else
+//          {
+//            USBD_CtlError(pdev, req);
+//            err++;
+//          }
+//          break;
+				
+				default:
+					if ((req->wValue >> 8) == USB_DESC_TYPE_STRING)
+					{
+						uint8_t str_index = (uint8_t)(req->wValue & 0xFF);
 
-        default:
-#if (USBD_SUPPORT_USER_STRING_DESC == 1U)
-          if (pdev->pClass->GetUsrStrDescriptor != NULL)
-          {
-            pbuf = pdev->pClass->GetUsrStrDescriptor(pdev, (req->wValue), &len);
-          }
-          else
-          {
-            USBD_CtlError(pdev, req);
-            err++;
-          }
-#else
-          USBD_CtlError(pdev, req);
-          err++;
-#endif
-          break;
+						if (pdev->pDesc->GetInterfaceStrDescriptor != NULL &&
+								(str_index == 4 || str_index == 5))
+						{
+							pbuf = pdev->pDesc->GetInterfaceStrDescriptor(pdev->dev_speed, &len, str_index);
+						}
+				#if (USBD_SUPPORT_USER_STRING_DESC == 1U)
+						else if (pdev->pClass->GetUsrStrDescriptor != NULL)
+						{
+							pbuf = pdev->pClass->GetUsrStrDescriptor(pdev, str_index, &len);
+						}
+				#endif
+						else
+						{
+							USBD_CtlError(pdev, req);
+							err++;
+						}
+					}
+					else
+					{
+						USBD_CtlError(pdev, req);
+						err++;
+					}
+					break;
+        
       }
       break;
 

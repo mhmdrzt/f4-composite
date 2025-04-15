@@ -42,6 +42,7 @@ __ALIGN_BEGIN static uint8_t USBD_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = {
      Interface 0: Mouse HID, using bInterfaceNumber = 0 and iInterface = 0x04
      Interface 1: Custom HID, using bInterfaceNumber = 1 and iInterface = 0x05
 */
+
 #define COMPOSITE_CONFIG_DESC_SIZE  (9 + (9+9+7) + (9+9+7+7))
 __ALIGN_BEGIN uint8_t USBD_Composite_CfgDesc[COMPOSITE_CONFIG_DESC_SIZE] __ALIGN_END = {
   /* Configuration Descriptor */
@@ -137,6 +138,7 @@ static uint8_t USBD_StrDesc[USBD_MAX_STR_DESC_SIZ];
 /* Modified interface string descriptor callback:
    This function now returns different strings based on the requested index.
    (Indices 4 and 5 are used for our two HID interfaces.) */
+
 uint8_t *USBD_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length, uint8_t index)
 {
   switch(index)
@@ -148,7 +150,7 @@ uint8_t *USBD_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length, 
       USBD_GetString((uint8_t *)USBD_CUSTOM_HID_INTERFACE_STRING, USBD_StrDesc, length);
       break;
     default:
-      USBD_GetString((uint8_t *)"Fuck", USBD_StrDesc, length);
+      USBD_GetString((uint8_t *)"ffff", USBD_StrDesc, length);
       break;
   }
   return USBD_StrDesc;
