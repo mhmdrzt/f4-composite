@@ -3,6 +3,7 @@
 #include "usbd_def.h"
 #include "usbd_hid_mouse.h"
 #include "usbd_custom_hid.h"
+#include "usbd_ioreq.h"
 
 
 #include "usbd_desc.h"
@@ -86,8 +87,33 @@ static uint8_t Composite_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *r
     }
     else if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_STANDARD)
     {
-        /* Let standard requests be handled by the core (see usbd_ctlreq.c) */
-        ret = USBD_OK;
+			uint16_t len;
+			uint8_t *pbuf;
+        if ((req->wValue >> 8) == 0x22U)
+				{
+					if(req->wIndex == 0) {
+						len = MIN(HID_MOUSE_REPORT_DESC_SIZE, req->wLength);
+						pbuf = HID_Mouse_ReportDesc;
+					} else if (req->wIndex == 1) {
+						len = MIN( CUSTOM_HID_REPORT_DESC_SIZE, req->wLength);
+						pbuf = Custom_HID_ReportDesc;
+					} else {
+						ret = USBD_FAIL; // Unknown interface
+					}
+					
+				}
+				else if ((req->wValue >> 8) == 0x21U)
+				{
+					pbuf = USBD_Composite_CfgDesc;
+					len = MIN(USBD_Composite_CfgDescSize, req->wLength);
+				}
+				else {
+					/* Handle in ctlreq.c */
+					ret = USBD_OK;
+				}
+				if (pbuf != NULL && len >= 1) {
+					(void)USBD_CtlSendData(pdev, pbuf, len);
+				}
     }
     else
     {
@@ -110,11 +136,11 @@ static uint8_t Composite_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 /* Composite_DataOut: Handle data OUT events by endpoint number */
 static uint8_t Composite_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-    /* Dispatch if your custom HID OUT endpoint (e.g., address 0x02)
-       is used for receiving data.
-       For example:
-       if(epnum == 0x02) { return USBD_CustomHID_DataOut(pdev, epnum); }
-    */
+//    Dispatch if your custom HID OUT endpoint (e.g., address 0x02)
+//       is used for receiving data.
+//       For example:
+       if(epnum == 0x02) { return USBD_CustomHID_DataOut(pdev); }
+    
     return USBD_OK;
 }
 

@@ -1,8 +1,11 @@
 /* Src/usbd_hid_mouse.c */
 #include "usbd_hid_mouse.h"
 #include "usbd_def.h"
+#include "usbd_ioreq.h"
+#include "usbd_desc.h"
 
-__ALIGN_BEGIN static uint8_t HID_Mouse_ReportDesc[] __ALIGN_END = {
+
+__ALIGN_BEGIN uint8_t HID_Mouse_ReportDesc[] __ALIGN_END = {
   0x05, 0x01,       // Usage Page (Generic Desktop)
   0x09, 0x02,       // Usage (Mouse)
   0xA1, 0x01,       // Collection (Application)
@@ -47,7 +50,8 @@ uint8_t USBD_HID_MOUSE_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req
 {
     /* Handle class-specific requests like GET_REPORT, SET_REPORT, etc.
        For now, simply return USBD_OK to acknowledge them */
-    return USBD_OK;
+	USBD_StatusTypeDef ret = USBD_OK;
+  return ret;
 }
 
 uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)

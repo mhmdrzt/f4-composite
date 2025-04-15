@@ -109,7 +109,7 @@ __ALIGN_BEGIN uint8_t USBD_Composite_CfgDesc[COMPOSITE_CONFIG_DESC_SIZE] __ALIGN
   USB_DESC_TYPE_ENDPOINT,             /* bDescriptorType: Endpoint */
   0x82,                               /* bEndpointAddress: IN (address 2) */
   0x03,                               /* bmAttributes: Interrupt */
-  0x08, 0x00,                         /* wMaxPacketSize: 8 bytes */
+  0x09, 0x00,                         /* wMaxPacketSize: 9 bytes */
   0x0A,                               /* bInterval: 10 ms */
 
   /* Endpoint Descriptor for Custom HID OUT endpoint */
@@ -117,7 +117,7 @@ __ALIGN_BEGIN uint8_t USBD_Composite_CfgDesc[COMPOSITE_CONFIG_DESC_SIZE] __ALIGN
   USB_DESC_TYPE_ENDPOINT,             /* bDescriptorType: Endpoint */
   0x02,                               /* bEndpointAddress: OUT (address 2) */
   0x03,                               /* bmAttributes: Interrupt */
-  0x08, 0x00,                         /* wMaxPacketSize: 8 bytes */
+  0x09, 0x00,                         /* wMaxPacketSize: 9 bytes */
   0x0A                                /* bInterval: 10 ms */
 };
 uint16_t USBD_Composite_CfgDescSize = COMPOSITE_CONFIG_DESC_SIZE;
