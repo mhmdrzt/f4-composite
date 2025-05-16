@@ -57,6 +57,9 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 extern USBD_HandleTypeDef hUsbDeviceFS;
+uint8_t buttons_func = 0;
+uint8_t new_packet = 0;
+uint8_t custom_rx_buff[9];
 /* USER CODE END 0 */
 
 /**
@@ -82,13 +85,21 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+	// pb0 out init:
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	GPIOB->ODR &= ~GPIO_PIN_0;
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
+	
 	while(hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) 
     {
         HAL_Delay(10);
@@ -97,20 +108,31 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	GPIOB->ODR |= GPIO_PIN_0;
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 		if (!HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin)) {
-			uint8_t mouseReport[3] = {0x00, -10, 0}; // Move -10 pixels
-			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, mouseReport, sizeof(mouseReport));
+			uint8_t mouseReport[4] = {0x00,0x00, -1, 0}; // Move -10 pixels
+			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, &mouseReport[buttons_func%2], 3);
 			HAL_Delay(10);
+			GPIOB->ODR |= GPIO_PIN_0;
 		}
     if (!HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin)) {
-			uint8_t mouseReport[3] = {0x00, 10, 0}; // Move 10 pixels right
-			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, mouseReport, sizeof(mouseReport));
+			uint8_t mouseReport[4] = {0x00, 0x00, 1, 0}; // Move 10 pixels right
+			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, &mouseReport[buttons_func%2], 3);
 			HAL_Delay(10);
+			GPIOB->ODR &= ~GPIO_PIN_0;
+		}
+		if (new_packet) {
+			new_packet = 0;
+			buttons_func = !buttons_func;
+			uint8_t customReport[9] = {0};
+			customReport[0] = 0x02; // reportID
+			memcpy(&customReport[1], custom_rx_buff, 8);
+			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 9);
 		}
   }
   /* USER CODE END 3 */

@@ -6,7 +6,7 @@ __ALIGN_BEGIN uint8_t Custom_HID_ReportDesc[] __ALIGN_END = {
   0x06, 0x00, 0xFF,  // Usage Page (Vendor Defined 0xFF00)
   0x09, 0x01,        // Usage (Vendor Usage 1)
   0xA1, 0x01,        // Collection (Application)
-	0x85, 0x02,       //   << REPORT ID 1
+	0x85, 0x02,       //   << REPORT ID 2
     0x15, 0x00,      //   Logical Minimum (0)
     0x26, 0xFF, 0x00,//   Logical Maximum (255)
     0x75, 0x08,      //   Report Size (8)
@@ -36,15 +36,24 @@ uint8_t USBD_CustomHID_Init(USBD_HandleTypeDef *pdev)
     return USBD_OK;
 }
 
+extern uint8_t custom_rx_buff[9];
+extern uint8_t new_packet;
 uint8_t USBD_CustomHID_DataOut(USBD_HandleTypeDef *pdev)
 {
         // پردازش دیتای دریافتی از CustomHIDRxBuffer (طول 9 بایت)
         // مثلاً: uint8_t data = CustomHIDRxBuffer[1]; (0 index همون Report ID ـه)
 
         USBD_LL_PrepareReceive(pdev, 0x02, CustomHIDRxBuffer, sizeof(CustomHIDRxBuffer));
+		
+	memcpy(custom_rx_buff, CustomHIDRxBuffer, 9);
+	new_packet = 1;
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+  return USBD_OK;
+}
 
-
-    return USBD_OK;
+uint8_t USBD_CUSTOM_HID_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
+{
+    return USBD_LL_Transmit(pdev, 0x82, report, len);  // 0x81 is the endpoint defined in your descriptor for mouse IN
 }
 
 uint8_t USBD_CustomHID_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)

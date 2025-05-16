@@ -165,6 +165,23 @@ extern "C" {
   */
 
 
+#define HID_REQ_SET_PROTOCOL                       0x0BU
+#define HID_REQ_GET_PROTOCOL                       0x03U
+
+#define HID_REQ_SET_IDLE                           0x0AU
+#define HID_REQ_GET_IDLE                           0x02U
+
+#define HID_REQ_SET_REPORT                         0x09U
+#define HID_REQ_GET_REPORT                         0x01U
+/** @defgroup USBD_CORE_Exported_TypesDefinitions
+  * @{
+  */
+typedef enum
+{
+  HID_IDLE = 0,
+  HID_BUSY,
+} HID_StateTypeDef;
+
 /** @defgroup USBD_DEF_Exported_TypesDefinitions
   * @{
   */

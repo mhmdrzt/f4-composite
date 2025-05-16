@@ -81,7 +81,7 @@ __ALIGN_BEGIN uint8_t USBD_Composite_CfgDesc[COMPOSITE_CONFIG_DESC_SIZE] __ALIGN
   USB_DESC_TYPE_ENDPOINT,             /* bDescriptorType: Endpoint */
   0x81,                               /* bEndpointAddress: IN (address 1) */
   0x03,                               /* bmAttributes: Interrupt */
-  0x04, 0x00,                         /* wMaxPacketSize: 4 bytes */
+  0x06, 0x00,                         /* wMaxPacketSize: 4 bytes */
   0x0A,                               /* bInterval: 10 ms */
 
   /* --- Interface 1: Custom HID --- */

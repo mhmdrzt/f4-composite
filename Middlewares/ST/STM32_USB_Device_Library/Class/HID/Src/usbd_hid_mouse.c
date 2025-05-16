@@ -46,6 +46,8 @@ uint8_t USBD_HID_MOUSE_Init(USBD_HandleTypeDef *pdev)
     return USBD_OK;
 }
 
+
+static uint8_t HID_MOUSE_Protocol = 1; // 1 = Report Protocol (default), 0 = Boot Protocol
 uint8_t USBD_HID_MOUSE_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
     /* Handle class-specific requests like GET_REPORT, SET_REPORT, etc.

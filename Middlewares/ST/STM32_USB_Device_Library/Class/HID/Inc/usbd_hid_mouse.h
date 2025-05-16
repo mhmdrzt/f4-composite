@@ -8,6 +8,8 @@
 
 #include "usbd_def.h"
 
+
+
 extern uint8_t HID_Mouse_ReportDesc[];
 #define HID_MOUSE_REPORT_DESC_SIZE   50//(sizeof(HID_Mouse_ReportDesc))
 
