@@ -7,7 +7,12 @@
 #endif
 
 #include "usbd_def.h"
-
+#include "usbd_hid_mouse.h"
+#include "usbd_custom_hid.h"
+typedef struct {
+  USBD_HID_MOUSE_HandleTypeDef mouse;
+  USBD_CUSTOM_HID_HandleTypeDef custom;
+} USBD_COMPOSITE_HandleTypeDef;
 /* Declaration of the composite class structure */
 extern USBD_ClassTypeDef USBD_Composite;
 #define USBD_COMPOSITE_CLASS &USBD_Composite

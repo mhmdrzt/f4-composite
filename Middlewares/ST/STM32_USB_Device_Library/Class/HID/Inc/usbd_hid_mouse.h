@@ -8,7 +8,11 @@
 
 #include "usbd_def.h"
 
-
+typedef struct {
+  uint8_t state;
+} USBD_HID_MOUSE_HandleTypeDef;
+#define HID_MOUSE_IDLE 0
+#define HID_MOUSE_BUSY 1
 
 extern uint8_t HID_Mouse_ReportDesc[];
 #define HID_MOUSE_REPORT_DESC_SIZE   50//(sizeof(HID_Mouse_ReportDesc))
@@ -16,6 +20,7 @@ extern uint8_t HID_Mouse_ReportDesc[];
 uint8_t USBD_HID_MOUSE_Init(USBD_HandleTypeDef *pdev);
 uint8_t USBD_HID_MOUSE_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req);
 uint8_t* USBD_HID_MOUSE_GetReportDescriptor(uint16_t* length);
+uint8_t USBD_HID_MOUSE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum);
 
 #ifdef __cplusplus
 }

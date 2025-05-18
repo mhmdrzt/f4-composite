@@ -98,7 +98,7 @@
 /* Memory management macros make sure to use static memory allocation */
 /** Alias for memory allocation. */
 
-//#define USBD_malloc         (void *)USBD_static_malloc
+#define USBD_malloc         (void *)USBD_static_malloc
 
 ///** Alias for memory release. */
 //#define USBD_free           USBD_static_free
@@ -157,7 +157,7 @@
   */
 
 /* Exported functions -------------------------------------------------------*/
-//void *USBD_static_malloc(uint32_t size);
+void *USBD_static_malloc(uint32_t size);
 //void USBD_static_free(void *p);
 
 /**

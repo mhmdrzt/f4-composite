@@ -601,7 +601,8 @@ uint32_t USBD_LL_GetRxDataSize(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
   return HAL_PCD_EP_GetRxCount((PCD_HandleTypeDef*) pdev->pData, ep_addr);
 }
-
+#define MAX_STATIC_ALLOC_SIZE  256 
+__ALIGN_BEGIN static uint32_t mem[MAX_STATIC_ALLOC_SIZE / 4] __ALIGN_END;
 /**
   * @brief  Static single allocation.
   * @param  size: Size of allocated memory
@@ -609,8 +610,9 @@ uint32_t USBD_LL_GetRxDataSize(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
   */
 void *USBD_static_malloc(uint32_t size)
 {
-//  static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1];/* On 32-bit boundary */
-//  return mem;
+	if (size > MAX_STATIC_ALLOC_SIZE)
+		return NULL;
+	return (void *)mem;
 }
 
 /**

@@ -1,5 +1,6 @@
 /* Src/usbd_hid_mouse.c */
 #include "usbd_hid_mouse.h"
+#include "usbd_composite.h"
 #include "usbd_def.h"
 #include "usbd_ioreq.h"
 #include "usbd_desc.h"
@@ -40,9 +41,11 @@ extern USBD_HandleTypeDef hUsbDeviceFS;  // Ensure this global is accessible
 
 uint8_t USBD_HID_MOUSE_Init(USBD_HandleTypeDef *pdev)
 {
+	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
     /* Open endpoint 0x81 as an interrupt IN endpoint with packet size 4 */
     USBD_LL_OpenEP(pdev, 0x81, USBD_EP_TYPE_INTR, 4);
     /* If required, allocate the HID report buffer or do additional init here */
+	memset(&composite->mouse, 0, sizeof(composite->mouse));
     return USBD_OK;
 }
 
@@ -58,7 +61,25 @@ uint8_t USBD_HID_MOUSE_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req
 
 uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
 {
-    return USBD_LL_Transmit(pdev, 0x81, report, len);  // 0x81 is the endpoint defined in your descriptor for mouse IN
+    USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
+    USBD_HID_MOUSE_HandleTypeDef *hhid = &composite->mouse;
+
+    if (pdev->dev_state == USBD_STATE_CONFIGURED)
+    {
+        if (hhid->state == HID_MOUSE_IDLE)
+        {
+            hhid->state = HID_MOUSE_BUSY;
+            return USBD_LL_Transmit(pdev, 0x81, report, len);
+        }
+    }
+
+    return USBD_BUSY;
+}
+uint8_t USBD_HID_MOUSE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
+{
+	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
+  composite->mouse.state = HID_MOUSE_IDLE;
+  return USBD_OK;
 }
 
 uint8_t* USBD_HID_MOUSE_GetReportDescriptor(uint16_t* length)

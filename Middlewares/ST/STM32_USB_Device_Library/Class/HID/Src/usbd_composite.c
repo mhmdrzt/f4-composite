@@ -43,23 +43,34 @@ USBD_ClassTypeDef USBD_Composite =
 /* Composite_Init: Initialize both HID interfaces */
 static uint8_t Composite_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
-    uint8_t ret_mouse, ret_custom;
-    ret_mouse = USBD_HID_MOUSE_Init(pdev);
-    ret_custom = USBD_CustomHID_Init(pdev);
+	USBD_COMPOSITE_HandleTypeDef *composite;
+
+  
+	composite = USBD_malloc(sizeof(USBD_COMPOSITE_HandleTypeDef));
+	if (composite == NULL) return USBD_FAIL;
+	memset(composite, 0, sizeof(USBD_COMPOSITE_HandleTypeDef));
+	pdev->pClassData = composite;
+	
+  uint8_t ret_mouse, ret_custom;
+  ret_mouse = USBD_HID_MOUSE_Init(pdev);
+  ret_custom = USBD_CustomHID_Init(pdev);
     
-    if ((ret_mouse == USBD_OK) && (ret_custom == USBD_OK))
-    {
-        return USBD_OK;
-    }
-    else
-    {
-        return USBD_FAIL;
-    }
+	if ((ret_mouse == USBD_OK) && (ret_custom == USBD_OK))
+	{
+		return USBD_OK;
+	}
+	else
+	{
+		return USBD_FAIL;
+	}
 }
 
 /* Composite_DeInit: Deinitialize both HID interfaces */
 static uint8_t Composite_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
+	USBD_LL_CloseEP(pdev, 0x81);  // Mouse IN
+    USBD_LL_CloseEP(pdev, 0x82);  // Custom IN
+    USBD_LL_CloseEP(pdev, 0x02);  // Custom OUT
     /* Add per-interface deinitialization if necessary. */
     return USBD_OK;
 }
@@ -125,12 +136,16 @@ static uint8_t Composite_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *r
 /* Composite_DataIn: Handle data IN events by endpoint number */
 static uint8_t Composite_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-    /* Dispatch based on endpoint number if needed.
-       For example:
-       if(epnum == 0x81) { return USBD_HID_MOUSE_DataIn(pdev, epnum); }
-       else if(epnum == 0x82) { return USBD_CustomHID_DataIn(pdev, epnum); }
-    */
-    return USBD_OK;
+    /* Dispatch based on endpoint number if needed. */
+		uint8_t retval = USBD_OK;
+       if(epnum == (0x81 & 0x7F)) {
+				retval = USBD_HID_MOUSE_DataIn(pdev, epnum); 
+			 }
+       else if(epnum == (0x82 & 0x7F)) {
+				retval = USBD_CustomHID_DataIn(pdev, epnum);
+			 }
+    
+    return retval;
 }
 
 /* Composite_DataOut: Handle data OUT events by endpoint number */

@@ -1,5 +1,6 @@
 /* Src/usbd_custom_hid.c */
 #include "usbd_custom_hid.h"
+#include "usbd_composite.h"
 #include "usbd_def.h"
 
 __ALIGN_BEGIN uint8_t Custom_HID_ReportDesc[] __ALIGN_END = {
@@ -28,9 +29,12 @@ uint8_t* USBD_CustomHID_GetReportDescriptor(uint16_t* length)
 }
 uint8_t USBD_CustomHID_Init(USBD_HandleTypeDef *pdev)
 {
+	
+	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
     /* Open IN endpoint 0x82 and OUT endpoint 0x02 for the custom HID */
     USBD_LL_OpenEP(pdev, 0x82, USBD_EP_TYPE_INTR, 9);   // IN endpoint
     USBD_LL_OpenEP(pdev, 0x02, USBD_EP_TYPE_INTR, 9);   // OUT endpoint
+	memset(&composite->custom, 0, sizeof(composite->custom));
 		USBD_LL_PrepareReceive(pdev, 0x02, CustomHIDRxBuffer, sizeof(CustomHIDRxBuffer));
 
     return USBD_OK;
@@ -50,10 +54,28 @@ uint8_t USBD_CustomHID_DataOut(USBD_HandleTypeDef *pdev)
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
   return USBD_OK;
 }
+uint8_t USBD_CustomHID_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
+{
+	  USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
+    composite->custom.state = CUSTOM_HID_IDLE;
+    return USBD_OK;
+}
 
 uint8_t USBD_CUSTOM_HID_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
 {
-    return USBD_LL_Transmit(pdev, 0x82, report, len);  // 0x81 is the endpoint defined in your descriptor for mouse IN
+    USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
+    USBD_CUSTOM_HID_HandleTypeDef *hhid = &composite->custom;
+
+    if (pdev->dev_state == USBD_STATE_CONFIGURED)
+    {
+        if (hhid->state == CUSTOM_HID_IDLE)
+        {
+            hhid->state = CUSTOM_HID_BUSY;
+            return USBD_LL_Transmit(pdev, 0x82, report, len);
+        }
+    }
+
+    return USBD_BUSY;
 }
 
 uint8_t USBD_CustomHID_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)

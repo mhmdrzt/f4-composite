@@ -97,6 +97,13 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+	
+	/* wait for butt1 press */
+	
+	while (HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin));
+	GPIOB->ODR |= GPIO_PIN_0;
+	while (!HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin));
+	
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 	
@@ -108,7 +115,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	GPIOB->ODR |= GPIO_PIN_0;
+	GPIOB->ODR &= ~GPIO_PIN_0;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -132,7 +139,7 @@ int main(void)
 			uint8_t customReport[9] = {0};
 			customReport[0] = 0x02; // reportID
 			memcpy(&customReport[1], custom_rx_buff, 8);
-			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 9);
+			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 8);
 		}
   }
   /* USER CODE END 3 */
