@@ -123,8 +123,8 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		if (!HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin)) {
 			uint8_t mouseReport[4] = {0x00,0x00, -1, 0}; // Move -10 pixels
-			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, &mouseReport[buttons_func%2], 3);
-			HAL_Delay(10);
+			//USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, &mouseReport[buttons_func%2], 3);
+			//HAL_Delay(10);
 			GPIOB->ODR |= GPIO_PIN_0;
 		}
     if (!HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin)) {
@@ -133,13 +133,14 @@ int main(void)
 			HAL_Delay(10);
 			GPIOB->ODR &= ~GPIO_PIN_0;
 		}
-		if (new_packet) {
+		if (!HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin)) {
 			new_packet = 0;
 			buttons_func = !buttons_func;
 			uint8_t customReport[9] = {0};
 			customReport[0] = 0x02; // reportID
-			memcpy(&customReport[1], custom_rx_buff, 8);
+			//memcpy(&customReport[1], custom_rx_buff, 8);
 			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 8);
+			HAL_Delay(10);
 		}
   }
   /* USER CODE END 3 */

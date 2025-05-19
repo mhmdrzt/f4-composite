@@ -162,5 +162,6 @@ static uint8_t Composite_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 /* Composite_EP0_RxReady: Endpoint 0 Rx Ready callback */
 static uint8_t Composite_EP0_RxReady(USBD_HandleTypeDef *pdev)
 {
+
     return USBD_OK;
 }
