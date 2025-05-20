@@ -139,7 +139,7 @@ int main(void)
 			uint8_t customReport[9] = {0};
 			customReport[0] = 0x02; // reportID
 			//memcpy(&customReport[1], custom_rx_buff, 8);
-			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 8);
+			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 9);
 			HAL_Delay(10);
 		}
   }

@@ -58,7 +58,7 @@ uint8_t USBD_HID_MOUSE_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req
 	USBD_StatusTypeDef ret = USBD_OK;
   return ret;
 }
-
+uint32_t last_tick_mouse = 0;
 uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
 {
     USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
@@ -66,13 +66,13 @@ uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uin
 
     if (pdev->dev_state == USBD_STATE_CONFIGURED)
     {
-        if (hhid->state == HID_MOUSE_IDLE)
+        if (hhid->state == HID_MOUSE_IDLE|| (HAL_GetTick() - last_tick_mouse > 50))
         {
             hhid->state = HID_MOUSE_BUSY;
             return USBD_LL_Transmit(pdev, 0x81, report, len);
         }
     }
-
+last_tick_mouse = HAL_GetTick();
     return USBD_BUSY;
 }
 uint8_t USBD_HID_MOUSE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)

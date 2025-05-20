@@ -60,21 +60,22 @@ uint8_t USBD_CustomHID_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
     composite->custom.state = CUSTOM_HID_IDLE;
     return USBD_OK;
 }
-
+uint32_t try_cnt_custom = 0;
+uint32_t last_tick_custom = 0;
 uint8_t USBD_CUSTOM_HID_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
 {
     USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
     USBD_CUSTOM_HID_HandleTypeDef *hhid = &composite->custom;
-
+		
     if (pdev->dev_state == USBD_STATE_CONFIGURED)
     {
-        if (hhid->state == CUSTOM_HID_IDLE)
+        if (hhid->state == CUSTOM_HID_IDLE || (HAL_GetTick() - last_tick_custom > 50))
         {
             hhid->state = CUSTOM_HID_BUSY;
             return USBD_LL_Transmit(pdev, 0x82, report, len);
         }
     }
-
+	last_tick_custom = HAL_GetTick();
     return USBD_BUSY;
 }
 
