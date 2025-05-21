@@ -69,10 +69,21 @@ static uint8_t Composite_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 static uint8_t Composite_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
 	USBD_LL_CloseEP(pdev, 0x81);  // Mouse IN
-    USBD_LL_CloseEP(pdev, 0x82);  // Custom IN
-    USBD_LL_CloseEP(pdev, 0x02);  // Custom OUT
-    /* Add per-interface deinitialization if necessary. */
-    return USBD_OK;
+	pdev->ep_in[0x81 & 0xFU].is_used = 0U;
+  pdev->ep_in[0x81 & 0xFU].bInterval = 0U;
+	USBD_LL_CloseEP(pdev, 0x82);  // Custom IN
+	pdev->ep_in[0x82 & 0xFU].is_used = 0U;
+  pdev->ep_in[0x82 & 0xFU].bInterval = 0U;
+	USBD_LL_CloseEP(pdev, 0x02);  // Custom OUT
+	pdev->ep_out[0x02 & 0xFU].is_used = 0U;
+  pdev->ep_out[0x02 & 0xFU].bInterval = 0U;
+	/* Free allocated memory */
+  if (pdev->pClassData != NULL)
+  {
+    pdev->pClassData = NULL;
+  }
+	/* Add per-interface deinitialization if necessary. */
+	return USBD_OK;
 }
 
 /* Composite_Setup: Dispatch class-specific requests based on request type and interface (wIndex) */
