@@ -24,8 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "usbd_def.h"
-#include "usbd_hid_mouse.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,7 +126,7 @@ int main(void)
 			//HAL_Delay(10);
 			GPIOB->ODR |= GPIO_PIN_0;
 		}
-    if (!HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin)) {
+    if (!HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin)) { 
 			uint8_t mouseReport[4] = {0x00, 0x00, 1, 0}; // Move 10 pixels right
 			USBD_HID_MOUSE_SendReport(&hUsbDeviceFS, &mouseReport[buttons_func%2], 3);
 			HAL_Delay(10);

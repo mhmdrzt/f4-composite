@@ -17,8 +17,8 @@ static uint8_t Composite_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t Composite_EP0_RxReady(USBD_HandleTypeDef *pdev);
 static uint8_t* USBD_Composite_GetFSConfigDescriptor(uint16_t *length)
 {
-    *length = USBD_Composite_CfgDescSize;
-    return USBD_Composite_CfgDesc;
+	*length = USBD_Composite_CfgDescSize;
+	return USBD_Composite_CfgDesc;
 }
 
 /* Composite Class callbacks structure */
@@ -49,7 +49,7 @@ static uint8_t Composite_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 	composite = USBD_malloc(sizeof(USBD_COMPOSITE_HandleTypeDef));
 	if (composite == NULL) return USBD_FAIL;
 	memset(composite, 0, sizeof(USBD_COMPOSITE_HandleTypeDef));
-	pdev->pClassData = composite;
+	pdev->pClassData = (void *)composite;
 	
   uint8_t ret_mouse, ret_custom;
   ret_mouse = USBD_HID_MOUSE_Init(pdev);

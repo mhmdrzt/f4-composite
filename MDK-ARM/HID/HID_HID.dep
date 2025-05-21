@@ -1,7 +1,7 @@
 Dependencies for Project 'HID', Target 'HID': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (startup_stm32f429xx.s)(0x67F91FD8)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 536" --pd "_RTE_ SETA 1" --pd "STM32F429xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f429xx.lst --xref -o hid\startup_stm32f429xx.o --depend hid\startup_stm32f429xx.d)
-F (../Core/Src/main.c)(0x682BFABC)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\main.o --omf_browse hid\main.crf --depend hid\main.d)
+F (../Core/Src/main.c)(0x682E23D0)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\main.o --omf_browse hid\main.crf --depend hid\main.d)
 I (../Core/Inc/main.h)(0x67F91FD5)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x61609714)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x67F91FD5)
@@ -33,14 +33,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x61609714)
-I (../USB_DEVICE/App/usb_device.h)(0x67F93A57)
-I (../Core/Inc/gpio.h)(0x67F91FD3)
+I (../USB_DEVICE/App/usb_device.h)(0x682E2389)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h)(0x68264EA4)
 I (../USB_DEVICE/Target/usbd_conf.h)(0x6828D447)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x602562BC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602562BC)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602562C6)
-I (../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc/usbd_hid_mouse.h)(0x68295C80)
+I (../Core/Inc/gpio.h)(0x67F91FD3)
 F (../Core/Src/gpio.c)(0x67F91FD3)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\gpio.o --omf_browse hid\gpio.crf --depend hid\gpio.d)
 I (../Core/Inc/gpio.h)(0x67F91FD3)
 I (../Core/Inc/main.h)(0x67F91FD5)
@@ -140,7 +139,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x61609714)
 F (../USB_DEVICE/App/usb_device.c)(0x67F937F2)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\usb_device.o --omf_browse hid\usb_device.crf --depend hid\usb_device.d)
-I (../USB_DEVICE/App/usb_device.h)(0x67F93A57)
+I (../USB_DEVICE/App/usb_device.h)(0x682E2389)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x61609714)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f429xx.h)(0x61609714)
 I (../Drivers/CMSIS/Include/core_cm4.h)(0x61609566)
@@ -171,13 +170,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x61609714)
-I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x61609569)
+I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h)(0x68264EA4)
 I (../USB_DEVICE/Target/usbd_conf.h)(0x6828D447)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x602562BC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602562BC)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602562C6)
 I (../Core/Inc/main.h)(0x67F91FD5)
-I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h)(0x68264EA4)
+I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x61609569)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h)(0x61609569)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x67F944BC)
 I (../USB_DEVICE/App/usbd_desc.h)(0x67F93AB9)
@@ -224,7 +223,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x61609714)
 I (../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc/usbd_hid_mouse.h)(0x68295C80)
 I (../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc/usbd_custom_hid.h)(0x68295C5D)
-F (../USB_DEVICE/Target/usbd_conf.c)(0x682B7612)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\usbd_conf.o --omf_browse hid\usbd_conf.crf --depend hid\usbd_conf.d)
+F (../USB_DEVICE/Target/usbd_conf.c)(0x682E28B4)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\usbd_conf.o --omf_browse hid\usbd_conf.crf --depend hid\usbd_conf.d)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x61609714)
 I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f429xx.h)(0x61609714)
 I (../Drivers/CMSIS/Include/core_cm4.h)(0x61609566)
@@ -976,7 +975,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x61609714)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x61609714)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x61609569)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x67F944BC)
-F (..\Middlewares\ST\STM32_USB_Device_Library\Class\HID\Src\usbd_composite.c)(0x682B6C90)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\usbd_composite.o --omf_browse hid\usbd_composite.crf --depend hid\usbd_composite.d)
+F (..\Middlewares\ST\STM32_USB_Device_Library\Class\HID\Src\usbd_composite.c)(0x682E26EE)(--c99 -c --cpu Cortex-M4.fp.sp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_DEVICE/App -I ../USB_DEVICE/Target -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HID-IC:\Users\asus\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\asus\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32F429xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F429xx-o hid\usbd_composite.o --omf_browse hid\usbd_composite.crf --depend hid\usbd_composite.d)
 I (../Middlewares/ST/STM32_USB_Device_Library/Class/HID/Inc/usbd_composite.h)(0x68295DE5)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h)(0x68264EA4)
 I (../USB_DEVICE/Target/usbd_conf.h)(0x6828D447)

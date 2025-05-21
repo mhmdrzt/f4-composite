@@ -42,11 +42,14 @@ extern USBD_HandleTypeDef hUsbDeviceFS;  // Ensure this global is accessible
 uint8_t USBD_HID_MOUSE_Init(USBD_HandleTypeDef *pdev)
 {
 	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
-    /* Open endpoint 0x81 as an interrupt IN endpoint with packet size 4 */
-    USBD_LL_OpenEP(pdev, 0x81, USBD_EP_TYPE_INTR, 4);
-    /* If required, allocate the HID report buffer or do additional init here */
+	/* Set interval */
+	pdev->ep_in[0x81 & 0xFU].bInterval = 0x5;
+	/* Open endpoint 0x81 as an interrupt IN endpoint with packet size 4 */
+	USBD_LL_OpenEP(pdev, 0x81, USBD_EP_TYPE_INTR, 4);
+	pdev->ep_in[0x81 & 0xFU].is_used = 1U;
+	/* Set interface state to IDLE */
 	memset(&composite->mouse, 0, sizeof(composite->mouse));
-    return USBD_OK;
+	return USBD_OK;
 }
 
 

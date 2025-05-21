@@ -31,13 +31,18 @@ uint8_t USBD_CustomHID_Init(USBD_HandleTypeDef *pdev)
 {
 	
 	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
-    /* Open IN endpoint 0x82 and OUT endpoint 0x02 for the custom HID */
-    USBD_LL_OpenEP(pdev, 0x82, USBD_EP_TYPE_INTR, 9);   // IN endpoint
-    USBD_LL_OpenEP(pdev, 0x02, USBD_EP_TYPE_INTR, 9);   // OUT endpoint
+	/* Set interval */
+	pdev->ep_in[0x82 & 0xFU].bInterval = 0x5;
+  pdev->ep_out[0x02 & 0xFU].bInterval = 0x5;
+	/* Open IN endpoint 0x82 and OUT endpoint 0x02 for the custom HID */
+	USBD_LL_OpenEP(pdev, 0x82, USBD_EP_TYPE_INTR, 9);   // IN endpoint
+	pdev->ep_in[0x82 & 0xFU].is_used = 1U;
+	USBD_LL_OpenEP(pdev, 0x02, USBD_EP_TYPE_INTR, 9);   // OUT endpoint
+	pdev->ep_out[0x02 & 0xFU].is_used = 1U;
 	memset(&composite->custom, 0, sizeof(composite->custom));
-		USBD_LL_PrepareReceive(pdev, 0x02, CustomHIDRxBuffer, sizeof(CustomHIDRxBuffer));
+	USBD_LL_PrepareReceive(pdev, 0x02, CustomHIDRxBuffer, sizeof(CustomHIDRxBuffer));
 
-    return USBD_OK;
+	return USBD_OK;
 }
 
 extern uint8_t custom_rx_buff[9];
