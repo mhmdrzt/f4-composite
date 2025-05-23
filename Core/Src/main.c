@@ -132,12 +132,12 @@ int main(void)
 			HAL_Delay(10);
 			GPIOB->ODR &= ~GPIO_PIN_0;
 		}
-		if (!HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin)) {
+		if (new_packet) {
 			new_packet = 0;
 			buttons_func = !buttons_func;
 			uint8_t customReport[9] = {0};
 			customReport[0] = 0x02; // reportID
-			//memcpy(&customReport[1], custom_rx_buff, 8);
+			memcpy(&customReport[1], &custom_rx_buff[1], 8);
 			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, customReport, 9);
 			HAL_Delay(10);
 		}

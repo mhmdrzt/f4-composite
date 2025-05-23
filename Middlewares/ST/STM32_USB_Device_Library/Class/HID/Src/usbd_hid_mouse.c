@@ -37,7 +37,7 @@ __ALIGN_BEGIN uint8_t HID_Mouse_ReportDesc[] __ALIGN_END = {
 
 
 
-extern USBD_HandleTypeDef hUsbDeviceFS;  // Ensure this global is accessible
+extern USBD_HandleTypeDef hUsbDeviceFS;
 
 uint8_t USBD_HID_MOUSE_Init(USBD_HandleTypeDef *pdev)
 {
@@ -56,27 +56,26 @@ uint8_t USBD_HID_MOUSE_Init(USBD_HandleTypeDef *pdev)
 static uint8_t HID_MOUSE_Protocol = 1; // 1 = Report Protocol (default), 0 = Boot Protocol
 uint8_t USBD_HID_MOUSE_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
-    /* Handle class-specific requests like GET_REPORT, SET_REPORT, etc.
-       For now, simply return USBD_OK to acknowledge them */
+	/* TODO: Handle Mouse HID class-specific requests */
 	USBD_StatusTypeDef ret = USBD_OK;
   return ret;
 }
 uint32_t last_tick_mouse = 0;
 uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
 {
-    USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
-    USBD_HID_MOUSE_HandleTypeDef *hhid = &composite->mouse;
+	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
+	USBD_HID_MOUSE_HandleTypeDef *hhid = &composite->mouse;
 
-    if (pdev->dev_state == USBD_STATE_CONFIGURED)
-    {
-        if (hhid->state == HID_MOUSE_IDLE|| (HAL_GetTick() - last_tick_mouse > 50))
-        {
-            hhid->state = HID_MOUSE_BUSY;
-            return USBD_LL_Transmit(pdev, 0x81, report, len);
-        }
-    }
-last_tick_mouse = HAL_GetTick();
-    return USBD_BUSY;
+	if (pdev->dev_state == USBD_STATE_CONFIGURED)
+	{
+		if (hhid->state == HID_MOUSE_IDLE|| (HAL_GetTick() - last_tick_mouse > 400))
+		{
+			hhid->state = HID_MOUSE_BUSY;
+			return USBD_LL_Transmit(pdev, 0x81, report, len);
+		}
+	}
+	last_tick_mouse = HAL_GetTick();
+  return USBD_BUSY;
 }
 uint8_t USBD_HID_MOUSE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
@@ -87,6 +86,6 @@ uint8_t USBD_HID_MOUSE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 
 uint8_t* USBD_HID_MOUSE_GetReportDescriptor(uint16_t* length)
 {
-    *length = HID_MOUSE_REPORT_DESC_SIZE;
-    return (uint8_t*)HID_Mouse_ReportDesc;
+	*length = HID_MOUSE_REPORT_DESC_SIZE;
+	return (uint8_t*)HID_Mouse_ReportDesc;
 }

@@ -89,90 +89,84 @@ static uint8_t Composite_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 /* Composite_Setup: Dispatch class-specific requests based on request type and interface (wIndex) */
 static uint8_t Composite_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
-    uint8_t ret = USBD_OK;
+	uint8_t ret = USBD_OK;
 
-    /* Handle class requests only */
-    if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_CLASS)
-    {
-        if(req->wIndex == 0)
-        {
-            ret = USBD_HID_MOUSE_Setup(pdev, req);
-        }
-        else if(req->wIndex == 1)
-        {
-            ret = USBD_CustomHID_Setup(pdev, req);
-        }
-        else
-        {
-            ret = USBD_FAIL; // Unknown interface
-        }
-    }
-    else if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_STANDARD)
-    {
-			uint16_t len;
-			uint8_t *pbuf;
-        if ((req->wValue >> 8) == 0x22U)
-				{
-					if(req->wIndex == 0) {
-						len = MIN(HID_MOUSE_REPORT_DESC_SIZE, req->wLength);
-						pbuf = HID_Mouse_ReportDesc;
-					} else if (req->wIndex == 1) {
-						len = MIN( CUSTOM_HID_REPORT_DESC_SIZE, req->wLength);
-						pbuf = Custom_HID_ReportDesc;
-					} else {
-						ret = USBD_FAIL; // Unknown interface
-					}
-					
-				}
-				else if ((req->wValue >> 8) == 0x21U)
-				{
-					pbuf = USBD_Composite_CfgDesc;
-					len = MIN(USBD_Composite_CfgDescSize, req->wLength);
-				}
-				else {
-					/* Handle in ctlreq.c */
-					ret = USBD_OK;
-				}
-				if (pbuf != NULL && len >= 1) {
-					(void)USBD_CtlSendData(pdev, pbuf, len);
-				}
-    }
-    else
-    {
-        ret = USBD_FAIL;
-    }
-    return ret;
+	/* Handle class requests only */
+	if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_CLASS)
+	{
+		if(req->wIndex == 0)
+		{
+			ret = USBD_HID_MOUSE_Setup(pdev, req);
+		}
+		else if(req->wIndex == 1)
+		{
+			ret = USBD_CustomHID_Setup(pdev, req);
+		}
+		else
+		{
+			ret = USBD_FAIL; // Unknown interface
+		}
+	}
+	else if ((req->bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_STANDARD)
+	{
+		uint16_t len;
+		uint8_t *pbuf;
+		if ((req->wValue >> 8) == 0x22U)
+		{
+			if(req->wIndex == 0) {
+				len = MIN(HID_MOUSE_REPORT_DESC_SIZE, req->wLength);
+				pbuf = HID_Mouse_ReportDesc;
+			} else if (req->wIndex == 1) {
+				len = MIN( CUSTOM_HID_REPORT_DESC_SIZE, req->wLength);
+				pbuf = Custom_HID_ReportDesc;
+			} else {
+				ret = USBD_FAIL; // Unknown interface
+			}
+		}
+		else if ((req->wValue >> 8) == 0x21U)
+		{
+			pbuf = USBD_Composite_CfgDesc;
+			len = MIN(USBD_Composite_CfgDescSize, req->wLength);
+		}
+		else {
+			/* Handle in ctlreq.c */
+			ret = USBD_OK;
+		}
+		if (pbuf != NULL && len >= 1) {
+			(void)USBD_CtlSendData(pdev, pbuf, len);
+		}
+	}
+	else
+	{
+		ret = USBD_FAIL;
+	}
+	return ret;
 }
 
 /* Composite_DataIn: Handle data IN events by endpoint number */
 static uint8_t Composite_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-    /* Dispatch based on endpoint number if needed. */
-		uint8_t retval = USBD_OK;
-       if(epnum == (0x81 & 0x7F)) {
-				retval = USBD_HID_MOUSE_DataIn(pdev, epnum); 
-			 }
-       else if(epnum == (0x82 & 0x7F)) {
-				retval = USBD_CustomHID_DataIn(pdev, epnum);
-			 }
-    
-    return retval;
+	uint8_t retval = USBD_OK;
+	if(epnum == (0x81 & 0x7F)) {
+		retval = USBD_HID_MOUSE_DataIn(pdev, epnum); 
+	}
+	else if(epnum == (0x82 & 0x7F)) {
+		retval = USBD_CustomHID_DataIn(pdev, epnum);
+	}
+	return retval;
 }
 
 /* Composite_DataOut: Handle data OUT events by endpoint number */
 static uint8_t Composite_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-//    Dispatch if your custom HID OUT endpoint (e.g., address 0x02)
-//       is used for receiving data.
-//       For example:
-       if(epnum == 0x02) { return USBD_CustomHID_DataOut(pdev); }
-    
-    return USBD_OK;
+	if(epnum == 0x02) {
+		return USBD_CustomHID_DataOut(pdev);
+	}
+	return USBD_OK;
 }
 
 /* Composite_EP0_RxReady: Endpoint 0 Rx Ready callback */
 static uint8_t Composite_EP0_RxReady(USBD_HandleTypeDef *pdev)
 {
-
-    return USBD_OK;
+	return USBD_OK;
 }

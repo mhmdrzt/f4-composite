@@ -135,10 +135,6 @@ __ALIGN_BEGIN static uint8_t USBD_LangIDDesc[USB_LEN_LANGID_STR_DESC] __ALIGN_EN
 #define USBD_MAX_STR_DESC_SIZ         64
 static uint8_t USBD_StrDesc[USBD_MAX_STR_DESC_SIZ];
 
-/* Modified interface string descriptor callback:
-   This function now returns different strings based on the requested index.
-   (Indices 4 and 5 are used for our two HID interfaces.) */
-
 uint8_t *USBD_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length, uint8_t index)
 {
   switch(index)
@@ -156,7 +152,7 @@ uint8_t *USBD_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length, 
   return USBD_StrDesc;
 }
 
-/* Other string descriptor callbacks remain unchanged */
+
 uint8_t *USBD_DeviceDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
 {
   *length = sizeof(USBD_DeviceDesc);
@@ -201,7 +197,5 @@ USBD_DescriptorsTypeDef FS_Desc = {
   USBD_ProductStrDescriptor,
   USBD_SerialStrDescriptor,
   USBD_ConfigStrDescriptor,
-  /* For interface string, your USB core should call your custom function passing the requested index.
-     If not, modify the core accordingly. */
   USBD_InterfaceStrDescriptor,
 };

@@ -24,8 +24,8 @@ static uint8_t CustomHIDRxBuffer[9];
 
 uint8_t* USBD_CustomHID_GetReportDescriptor(uint16_t* length)
 {
-    *length = CUSTOM_HID_REPORT_DESC_SIZE;
-    return (uint8_t*)Custom_HID_ReportDesc;
+	*length = CUSTOM_HID_REPORT_DESC_SIZE;
+	return (uint8_t*)Custom_HID_ReportDesc;
 }
 uint8_t USBD_CustomHID_Init(USBD_HandleTypeDef *pdev)
 {
@@ -49,11 +49,8 @@ extern uint8_t custom_rx_buff[9];
 extern uint8_t new_packet;
 uint8_t USBD_CustomHID_DataOut(USBD_HandleTypeDef *pdev)
 {
-        // پردازش دیتای دریافتی از CustomHIDRxBuffer (طول 9 بایت)
-        // مثلاً: uint8_t data = CustomHIDRxBuffer[1]; (0 index همون Report ID ـه)
+	USBD_LL_PrepareReceive(pdev, 0x02, CustomHIDRxBuffer, sizeof(CustomHIDRxBuffer));
 
-        USBD_LL_PrepareReceive(pdev, 0x02, CustomHIDRxBuffer, sizeof(CustomHIDRxBuffer));
-		
 	memcpy(custom_rx_buff, CustomHIDRxBuffer, 9);
 	new_packet = 1;
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
@@ -69,23 +66,23 @@ uint32_t try_cnt_custom = 0;
 uint32_t last_tick_custom = 0;
 uint8_t USBD_CUSTOM_HID_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len)
 {
-    USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
-    USBD_CUSTOM_HID_HandleTypeDef *hhid = &composite->custom;
+	USBD_COMPOSITE_HandleTypeDef *composite = (USBD_COMPOSITE_HandleTypeDef *)pdev->pClassData;
+	USBD_CUSTOM_HID_HandleTypeDef *hhid = &composite->custom;
 		
-    if (pdev->dev_state == USBD_STATE_CONFIGURED)
-    {
-        if (hhid->state == CUSTOM_HID_IDLE || (HAL_GetTick() - last_tick_custom > 50))
-        {
-            hhid->state = CUSTOM_HID_BUSY;
-            return USBD_LL_Transmit(pdev, 0x82, report, len);
-        }
-    }
+	if (pdev->dev_state == USBD_STATE_CONFIGURED)
+	{
+		if (hhid->state == CUSTOM_HID_IDLE || (HAL_GetTick() - last_tick_custom > 50))
+		{
+			hhid->state = CUSTOM_HID_BUSY;
+			return USBD_LL_Transmit(pdev, 0x82, report, len);
+		}
+	}
 	last_tick_custom = HAL_GetTick();
-    return USBD_BUSY;
+	return USBD_BUSY;
 }
 
 uint8_t USBD_CustomHID_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
 {
-    /* Handle custom HID class-specific requests (e.g. GET_REPORT, SET_REPORT, etc.) */
-    return USBD_OK;
+	/* TODO: Handle custom HID class-specific requests */
+	return USBD_OK;
 }
